@@ -23,7 +23,7 @@ const corsOptions = {
     origin: 'https://job-protal-n8r2.vercel.app/',
     credentials:true
 }
-app.use(cors(corsOptions));
+app.use(cors());
 
  
 const PORT = process.env.PORT || 3000;
