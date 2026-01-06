@@ -14,9 +14,6 @@ export const register = async (req, res) => {
                 success: false
             });
         };
-        const file = req.file;
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
         const user = await User.findOne({ email });
         if (user) {
@@ -25,7 +22,22 @@ export const register = async (req, res) => {
                 success: false,
             })
         }
+        
         const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const file = req.file;
+        let profilePhoto = "";
+        
+        if (file) {
+            try {
+                const fileUri = getDataUri(file);
+                const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+                profilePhoto = cloudResponse.secure_url;
+            } catch (uploadError) {
+                console.log("File upload error:", uploadError);
+                // Continue with registration even if file upload fails
+            }
+        }
 
         await User.create({
             fullname,
@@ -34,7 +46,7 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
             profile:{
-                profilePhoto:cloudResponse.secure_url,
+                profilePhoto: profilePhoto,
             }
         });
 
@@ -44,6 +56,10 @@ export const register = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
 

@@ -34,6 +34,11 @@ const Signup = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
+        // Frontend validation
+        if (!input.fullname || !input.email || !input.phoneNumber || !input.password || !input.role) {
+            toast.error("Please fill all required fields.");
+            return;
+        }
         const formData = new FormData();    //formdata object
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
@@ -43,7 +48,15 @@ const Signup = () => {
         if (input.file) {
             formData.append("file", input.file);
         }
-
+        // Debug log
+        console.log("Submitting form with:", {
+            fullname: input.fullname,
+            email: input.email,
+            phoneNumber: input.phoneNumber,
+            password: input.password,
+            role: input.role,
+            file: input.file
+        });
         try {
             dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
@@ -56,7 +69,7 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Registration failed. Please try again.");
         } finally{
             dispatch(setLoading(false));
         }

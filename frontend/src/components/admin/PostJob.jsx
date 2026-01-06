@@ -42,7 +42,14 @@ const PostJob = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post(`${JOB_API_END_POINT}/post`, input,{
+            // Extract number from experience string (e.g., '2 year' -> 2)
+            let experience = input.experience;
+            if (typeof experience === 'string') {
+                const match = experience.match(/\d+/);
+                experience = match ? Number(match[0]) : 0;
+            }
+            const payload = { ...input, experience };
+            const res = await axios.post(`${JOB_API_END_POINT}/post`, payload,{
                 headers:{
                     'Content-Type':'application/json'
                 },

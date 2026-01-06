@@ -17,15 +17,30 @@ const Navbar = () => {
 
     const logoutHandler = async () => {
         try {
-            const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
-            if (res.data.success) {
-                dispatch(setUser(null));
-                navigate("/");
+            const res = await axios.get(`${USER_API_END_POINT}/logout`, { 
+                withCredentials: true,
+                timeout: 10000,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            // Clear user state regardless of response
+            dispatch(setUser(null));
+            navigate("/");
+            
+            if (res.data && res.data.success) {
                 toast.success(res.data.message);
+            } else {
+                toast.success("Logged out successfully");
             }
         } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
+            console.log('Logout error:', error);
+            
+            // Clear user state even if backend request fails
+            dispatch(setUser(null));
+            navigate("/");
+            toast.success("Logged out successfully");
         }
     }
     return (
