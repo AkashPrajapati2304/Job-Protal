@@ -6,29 +6,27 @@ import connectDB from "./utils/db.js";
 import userRoute from "./routes/user_route.js";
 import companyRoute from "./routes/company_route.js";
 import jobRoute from "./routes/job_route.js";
-import applicationRoute from "./routes/application_route.js"
-
+import applicationRoute from "./routes/application_route.js";
 
 dotenv.config({});
 
 const app = express();
 
- 
 // middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: [
-        'https://job-protal-n8r2.vercel.app',
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:8000', 
-    ],
-    credentials:true
-}
+  origin: [
+    "https://job-protal-2-jfou.onrender.com",
+    // 'http://localhost:3000',
+    // 'http://localhost:5173',
+    // 'http://127.0.0.1:5173',
+    // 'http://localhost:8000',
+  ],
+  credentials: true,
+};
 app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
@@ -38,7 +36,7 @@ app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-app.listen(PORT, ()=>{
-    connectDB();
-    console.log(`Server running on this ${PORT} port`);
-})
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server running on this ${PORT} port`);
+});
