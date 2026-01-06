@@ -31,7 +31,6 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
- 
 const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1/user", userRoute);
